@@ -16,6 +16,8 @@ import json
 from datetime import datetime
 import os
 
+from collections import deque, Counter
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend access
 
@@ -26,6 +28,27 @@ label_encoders = None
 target_encoder = None
 feature_names = None
 recommendation_engine = None
+# In-memory log of recent predictions for educator insights
+PREDICTION_LOG = deque(maxlen=5000)
+
+
+def _log_prediction(student_data: dict, risk_level: str, confidence: float, probabilities: dict):
+    entry = {
+        'student_id': student_data.get('student_id', 'Unknown'),
+        'risk_level': risk_level,
+        'confidence': float(confidence),
+        'probabilities': {k: float(v) for k, v in probabilities.items()},
+        'timestamp': datetime.now().isoformat(),
+        # Key student signals for aggregate insights
+        'attendance_rate': student_data.get('attendance_rate'),
+        'study_hours_per_week': student_data.get('study_hours_per_week'),
+        'lms_hours_per_week': student_data.get('lms_hours_per_week'),
+        'avg_sleep_hours': student_data.get('avg_sleep_hours'),
+        'stress_level': student_data.get('stress_level'),
+        'midterm_score': student_data.get('midterm_score'),
+    }
+    PREDICTION_LOG.append(entry)
+
 report_generator = None
 
 def load_model_and_artifacts():
@@ -147,6 +170,14 @@ def predict():
             'timestamp': datetime.now().isoformat()
         }
 
+        # Log for educator insights
+        _log_prediction(
+            student_data,
+            risk_level,
+            float(probabilities[predicted_class]),
+            {target_encoder.classes_[i]: float(probabilities[i]) for i in range(len(probabilities))}
+        )
+
         return jsonify(response)
 
     except Exception as e:
@@ -185,7 +216,7 @@ def predict_batch():
                 probabilities
             )
 
-            results.append({
+            result_entry = {
                 'student_id': student_data.get('student_id', 'Unknown'),
                 'risk_level': risk_level,
                 'confidence': float(probabilities[predicted_class]),
@@ -193,8 +224,18 @@ def predict_batch():
                     target_encoder.classes_[i]: float(probabilities[i])
                     for i in range(len(probabilities))
                 },
+
                 'recommendations': recommendations
-            })
+            }
+            results.append(result_entry)
+
+            # Log each prediction
+            _log_prediction(
+                student_data,
+                risk_level,
+                float(probabilities[predicted_class]),
+                {target_encoder.classes_[i]: float(probabilities[i]) for i in range(len(probabilities))}
+            )
 
         return jsonify({
             'total_students': len(results),
@@ -313,6 +354,55 @@ def get_sample_data():
     }
 
     return jsonify(sample)
+@app.route('/predictions/recent', methods=['GET'])
+def get_recent_predictions():
+    """Return recent predictions from the in-memory log"""
+    try:
+        limit = int(request.args.get('limit', 25))
+        items = list(PREDICTION_LOG)[-limit:][::-1]
+        return jsonify({
+            'count': len(items),
+            'results': items,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/insights', methods=['GET'])
+def get_insights():
+    """Aggregate educator-facing insights from recent predictions"""
+    try:
+        logs = list(PREDICTION_LOG)
+        total = len(logs)
+        risk_counts = Counter([x['risk_level'] for x in logs]) if total else Counter()
+
+        def _avg(key):
+            vals = [x[key] for x in logs if isinstance(x.get(key), (int, float))]
+            return float(np.mean(vals)) if vals else None
+
+        insights = {
+            'predictions_count': total,
+            'risk_distribution': [
+                {'label': k, 'count': v, 'percent': (v/total if total else 0)}
+                for k, v in risk_counts.items()
+            ],
+            'high_risk_rate': (risk_counts.get('High Risk', 0) / total) if total else 0.0,
+            'averages': {
+                'attendance_rate': _avg('attendance_rate'),
+                'study_hours_per_week': _avg('study_hours_per_week'),
+                'lms_hours_per_week': _avg('lms_hours_per_week'),
+                'avg_sleep_hours': _avg('avg_sleep_hours'),
+                'stress_level': _avg('stress_level'),
+                'midterm_score': _avg('midterm_score'),
+            },
+            'recent_predictions': logs[-10:][::-1],
+            'timestamp': datetime.now().isoformat()
+        }
+        return jsonify(insights)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 
 @app.route('/report', methods=['POST'])
 def generate_report():
@@ -371,6 +461,8 @@ if __name__ == '__main__':
     print("  GET  /health                    - Health check")
     print("  POST /predict                   - Single student prediction")
     print("  POST /predict/batch             - Batch predictions")
+    print("  GET  /predictions/recent        - Recent predictions")
+    print("  GET  /insights                  - Aggregated educator insights")
     print("  GET  /stats                     - Model statistics")
     print("  GET  /features                  - Required features list")
     print("  GET  /sample                    - Sample student data")

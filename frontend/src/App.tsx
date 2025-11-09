@@ -15,9 +15,11 @@ import SchoolIcon from '@mui/icons-material/School';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import InsightsIcon from '@mui/icons-material/Insights';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import ComprehensivePrediction from './components/ComprehensivePrediction';
 import BatchPrediction from './components/BatchPrediction';
 import ModelInsights from './components/ModelInsights';
+import EducatorDashboard from './components/EducatorDashboard';
 import './App.css';
 
 const theme = createTheme({
@@ -97,6 +99,7 @@ function App() {
 
         <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.default' }}>
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="dashboard tabs" variant="scrollable" allowScrollButtonsMobile>
+            <Tab icon={<DashboardIcon />} iconPosition="start" label="Dashboard" />
             <Tab icon={<PsychologyIcon />} iconPosition="start" label="Single Prediction" />
             <Tab icon={<UploadFileIcon />} iconPosition="start" label="Batch Predictions" />
             <Tab icon={<InsightsIcon />} iconPosition="start" label="Model Insights" />
@@ -104,14 +107,18 @@ function App() {
         </Box>
 
           <TabPanel value={tabValue} index={0}>
-            <ComprehensivePrediction />
+            <EducatorDashboard onNavigateToTab={(i) => setTabValue(i)} />
           </TabPanel>
 
           <TabPanel value={tabValue} index={1}>
-            <BatchPrediction />
+            <ComprehensivePrediction />
           </TabPanel>
 
           <TabPanel value={tabValue} index={2}>
+            <BatchPrediction />
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={3}>
             <ModelInsights />
           </TabPanel>
         </Container>
