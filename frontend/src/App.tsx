@@ -12,28 +12,24 @@ import {
   CssBaseline
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import InsightsIcon from '@mui/icons-material/Insights';
 import ComprehensivePrediction from './components/ComprehensivePrediction';
 import BatchPrediction from './components/BatchPrediction';
+import ModelInsights from './components/ModelInsights';
 import './App.css';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-    success: {
-      main: '#4caf50',
-    },
-    warning: {
-      main: '#ff9800',
-    },
-    error: {
-      main: '#f44336',
-    },
+    primary: { main: '#6A5AE0' },
+    secondary: { main: '#FF6B6B' },
+    success: { main: '#22c55e' },
+    warning: { main: '#f59e0b' },
+    error: { main: '#ef4444' },
+    background: { default: '#f7f7fb' }
   },
+  shape: { borderRadius: 12 },
 });
 
 interface TabPanelProps {
@@ -82,12 +78,30 @@ function App() {
         </AppBar>
 
         <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={tabValue} onChange={handleTabChange} aria-label="dashboard tabs">
-              <Tab label="Single Student Prediction" />
-              <Tab label="Batch Predictions" />
-            </Tabs>
-          </Box>
+        {/* Hero section */}
+        <Box sx={{
+          width: '100%',
+          background: 'linear-gradient(135deg, #6A5AE0 0%, #8A67F4 100%)',
+          color: 'white',
+          borderRadius: 2,
+          mb: 3,
+          p: { xs: 3, md: 5 }
+        }}>
+          <Typography variant="h4" fontWeight={800} gutterBottom>
+            Academic Performance Prediction
+          </Typography>
+          <Typography variant="body1" sx={{ opacity: 0.9 }}>
+            AI-powered risk assessment, insights, and recommendations to support student success.
+          </Typography>
+        </Box>
+
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.default' }}>
+          <Tabs value={tabValue} onChange={handleTabChange} aria-label="dashboard tabs" variant="scrollable" allowScrollButtonsMobile>
+            <Tab icon={<PsychologyIcon />} iconPosition="start" label="Single Prediction" />
+            <Tab icon={<UploadFileIcon />} iconPosition="start" label="Batch Predictions" />
+            <Tab icon={<InsightsIcon />} iconPosition="start" label="Model Insights" />
+          </Tabs>
+        </Box>
 
           <TabPanel value={tabValue} index={0}>
             <ComprehensivePrediction />
@@ -95,6 +109,10 @@ function App() {
 
           <TabPanel value={tabValue} index={1}>
             <BatchPrediction />
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={2}>
+            <ModelInsights />
           </TabPanel>
         </Container>
 
