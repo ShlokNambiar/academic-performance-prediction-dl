@@ -24,34 +24,38 @@ import './App.css';
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#6A5AE0' },
-    secondary: { main: '#FF6B6B' },
-    success: { main: '#22c55e' },
+    primary: { main: '#2563eb' },
+    secondary: { main: '#64748b' },
+    success: { main: '#10b981' },
     warning: { main: '#f59e0b' },
     error: { main: '#ef4444' },
-    background: { default: '#f8f9fd', paper: '#ffffff' }
+    background: { default: '#f8fafc', paper: '#ffffff' },
+    text: { primary: '#0f172a', secondary: '#64748b' }
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 8 },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h4: { fontWeight: 800 },
-    h5: { fontWeight: 700 },
-    h6: { fontWeight: 700 }
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    h4: { fontWeight: 700, letterSpacing: '-0.02em' },
+    h5: { fontWeight: 600, letterSpacing: '-0.01em' },
+    h6: { fontWeight: 600 }
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           textTransform: 'none',
-          fontWeight: 600,
-          borderRadius: 10
+          fontWeight: 500,
+          borderRadius: 8,
+          boxShadow: 'none',
+          '&:hover': { boxShadow: 'none' }
         }
       }
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: 'none'
+          backgroundImage: 'none',
+          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)'
         }
       }
     }
@@ -95,28 +99,20 @@ function App() {
           position="static"
           elevation={0}
           sx={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderBottom: '1px solid rgba(255,255,255,0.1)'
+            bgcolor: 'white',
+            borderBottom: '1px solid',
+            borderColor: 'divider'
           }}
         >
-          <Toolbar sx={{ py: 1 }}>
-            <Box
-              sx={{
-                p: 1,
-                borderRadius: 2,
-                bgcolor: 'rgba(255,255,255,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                mr: 2
-              }}
-            >
-              <SchoolIcon sx={{ fontSize: 28 }} />
+          <Toolbar sx={{ py: 1.5 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+              <SchoolIcon sx={{ fontSize: 28, color: 'primary.main' }} />
             </Box>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="h6" component="div" fontWeight={800}>
-                Academic Performance Prediction System
+              <Typography variant="h6" component="div" fontWeight={600} color="text.primary">
+                Academic Performance Prediction
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+              <Typography variant="caption" color="text.secondary">
                 AI-Powered Student Risk Assessment
               </Typography>
             </Box>
@@ -127,29 +123,17 @@ function App() {
         {/* Hero section */}
         <Box sx={{
           width: '100%',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
-          borderRadius: 4,
+          bgcolor: 'white',
+          borderRadius: 2,
           mb: 4,
-          p: { xs: 4, md: 6 },
-          boxShadow: '0 10px 40px rgba(102, 126, 234, 0.3)',
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '40%',
-            height: '100%',
-            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-            pointerEvents: 'none'
-          }
+          p: { xs: 3, md: 4 },
+          border: '1px solid',
+          borderColor: 'divider'
         }}>
-          <Typography variant="h3" fontWeight={900} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
+          <Typography variant="h4" fontWeight={700} gutterBottom color="text.primary">
             📚 Academic Performance Prediction
           </Typography>
-          <Typography variant="h6" sx={{ opacity: 0.95, position: 'relative', zIndex: 1, fontWeight: 400 }}>
+          <Typography variant="body1" color="text.secondary">
             AI-powered risk assessment, insights, and personalized recommendations to support student success.
           </Typography>
         </Box>
@@ -211,16 +195,16 @@ function App() {
             py: 4,
             px: 2,
             mt: 6,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            borderRadius: '12px 12px 0 0'
+            bgcolor: 'white',
+            borderTop: '1px solid',
+            borderColor: 'divider'
           }}
         >
           <Container maxWidth="sm">
-            <Typography variant="body1" align="center" fontWeight={600}>
+            <Typography variant="body2" align="center" color="text.secondary">
               © 2025 Academic Performance Prediction System
             </Typography>
-            <Typography variant="body2" align="center" sx={{ opacity: 0.9, mt: 0.5 }}>
+            <Typography variant="caption" align="center" display="block" color="text.secondary" sx={{ mt: 0.5 }}>
               Deep Learning Project | AI-Powered Education Analytics
             </Typography>
           </Container>

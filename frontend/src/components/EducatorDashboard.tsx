@@ -56,24 +56,24 @@ interface StatsResponse {
 }
 
 
-const StatCard: React.FC<{ label: string; value: string | number; sublabel?: string; gradient?: string }> = ({ label, value, sublabel, gradient }) => (
+const StatCard: React.FC<{ label: string; value: string | number; sublabel?: string; color?: string }> = ({ label, value, sublabel, color }) => (
   <Paper
     elevation={0}
     sx={{
-      p: 2.5,
-      borderRadius: 3,
-      background: gradient || 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: 'white',
-      transition: 'transform 0.2s, box-shadow 0.2s',
+      p: 3,
+      borderRadius: 2,
+      border: '1px solid',
+      borderColor: 'divider',
+      bgcolor: 'white',
+      transition: 'border-color 0.2s',
       '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: '0 12px 24px rgba(0,0,0,0.15)'
+        borderColor: color || 'primary.main'
       }
     }}
   >
-    <Typography variant="overline" sx={{ opacity: 0.9, fontWeight: 600 }}>{label}</Typography>
-    <Typography variant="h4" fontWeight={800} sx={{ my: 0.5 }}>{value}</Typography>
-    {sublabel && <Typography variant="caption" sx={{ opacity: 0.85 }}>{sublabel}</Typography>}
+    <Typography variant="caption" color="text.secondary" fontWeight={600} textTransform="uppercase" letterSpacing={0.5}>{label}</Typography>
+    <Typography variant="h4" fontWeight={700} sx={{ my: 1, color: color || 'text.primary' }}>{value}</Typography>
+    {sublabel && <Typography variant="body2" color="text.secondary">{sublabel}</Typography>}
   </Paper>
 );
 
@@ -137,48 +137,45 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
         {/* Left Sidebar */}
         <Box>
           <Typography variant="overline" color="text.secondary" fontWeight={700} sx={{ letterSpacing: 1.2 }}>Quick Metrics</Typography>
-          <Stack spacing={1.5} sx={{ mt: 1.5 }}>
+          <Stack spacing={2} sx={{ mt: 2 }}>
             <Paper
               elevation={0}
               sx={{
                 p: 2.5,
-                borderRadius: 3,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: 'white',
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'scale(1.02)' }
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'white'
               }}
             >
-              <Typography variant="h4" fontWeight={900}>{data?.predictions_count ?? 0}</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.9, fontWeight: 600 }}>Total Students</Typography>
+              <Typography variant="h4" fontWeight={700} color="primary.main">{data?.predictions_count ?? 0}</Typography>
+              <Typography variant="caption" color="text.secondary" fontWeight={600} textTransform="uppercase">Total Students</Typography>
             </Paper>
             <Paper
               elevation={0}
               sx={{
                 p: 2.5,
-                borderRadius: 3,
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                color: 'white',
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'scale(1.02)' }
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'white'
               }}
             >
-              <Typography variant="h4" fontWeight={900}>{highRiskCount}</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.9, fontWeight: 600 }}>At-Risk Students</Typography>
+              <Typography variant="h4" fontWeight={700} color="error.main">{highRiskCount}</Typography>
+              <Typography variant="caption" color="text.secondary" fontWeight={600} textTransform="uppercase">At-Risk Students</Typography>
             </Paper>
             <Paper
               elevation={0}
               sx={{
                 p: 2.5,
-                borderRadius: 3,
-                background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-                color: 'white',
-                transition: 'transform 0.2s',
-                '&:hover': { transform: 'scale(1.02)' }
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'white'
               }}
             >
-              <Typography variant="h4" fontWeight={900}>{accuracy != null ? `${(accuracy*100).toFixed(1)}%` : '—'}</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.9, fontWeight: 600 }}>Model Accuracy</Typography>
+              <Typography variant="h4" fontWeight={700} color="success.main">{accuracy != null ? `${(accuracy*100).toFixed(1)}%` : '—'}</Typography>
+              <Typography variant="caption" color="text.secondary" fontWeight={600} textTransform="uppercase">Model Accuracy</Typography>
             </Paper>
           </Stack>
 
@@ -188,12 +185,8 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
             <Button
               fullWidth
               variant="contained"
-              sx={{
-                borderRadius: 2,
-                textTransform: 'none',
-                fontWeight: 600,
-                boxShadow: '0 4px 12px rgba(106, 90, 224, 0.3)'
-              }}
+              size="small"
+              sx={{ justifyContent: 'flex-start', textTransform: 'none', fontWeight: 500 }}
             >
               Overview
             </Button>
@@ -227,59 +220,37 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
         {/* Main Content */}
         <Box>
           {/* Header */}
-          <Paper
-            elevation={0}
-            sx={{
-              p: 4,
-              borderRadius: 4,
-              mb: 3,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white',
-              boxShadow: '0 8px 32px rgba(102, 126, 234, 0.25)'
-            }}
-          >
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Box
-                sx={{
-                  p: 1.5,
-                  borderRadius: 2,
-                  bgcolor: 'rgba(255,255,255,0.2)',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <DashboardIcon sx={{ fontSize: 32 }} />
-              </Box>
-              <Box>
-                <Typography variant="h4" fontWeight={900}>Dashboard Overview</Typography>
-                <Typography variant="body1" sx={{ mt: 0.5, opacity: 0.95 }}>
-                  Real-time insights into student performance predictions and intervention recommendations.
-                </Typography>
-              </Box>
+          <Box sx={{ mb: 3 }}>
+            <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
+              <DashboardIcon sx={{ fontSize: 28, color: 'primary.main' }} />
+              <Typography variant="h5" fontWeight={700} color="text.primary">Dashboard Overview</Typography>
             </Stack>
-          </Paper>
+            <Typography variant="body2" color="text.secondary">
+              Real-time insights into student performance predictions and intervention recommendations.
+            </Typography>
+          </Box>
 
           {/* KPI row */}
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2.5 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2 }}>
             <StatCard
               label="Students Analyzed"
               value={data?.predictions_count ?? 0}
-              gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+              color="primary.main"
             />
             <StatCard
               label="High Risk"
               value={highRiskCount}
-              gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+              color="error.main"
             />
             <StatCard
               label="Avg Performance"
               value={avgPerf != null ? `${(avgPerf*100).toFixed(1)}%` : '—'}
-              gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+              color="warning.main"
             />
             <StatCard
               label="Model Accuracy"
               value={accuracy != null ? `${(accuracy*100).toFixed(1)}%` : '—'}
-              gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+              color="success.main"
             />
           </Box>
 
