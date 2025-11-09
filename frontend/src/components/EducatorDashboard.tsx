@@ -11,7 +11,6 @@ import {
   Stack,
   Divider
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import PsychologyIcon from '@mui/icons-material/Psychology';
@@ -261,40 +260,32 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
           </Paper>
 
           {/* KPI row */}
-          <Grid container spacing={2.5}>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard
-                label="Students Analyzed"
-                value={data?.predictions_count ?? 0}
-                gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard
-                label="High Risk"
-                value={highRiskCount}
-                gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard
-                label="Avg Performance"
-                value={avgPerf != null ? `${(avgPerf*100).toFixed(1)}%` : '—'}
-                gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <StatCard
-                label="Model Accuracy"
-                value={accuracy != null ? `${(accuracy*100).toFixed(1)}%` : '—'}
-                gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
-              />
-            </Grid>
-          </Grid>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2.5 }}>
+            <StatCard
+              label="Students Analyzed"
+              value={data?.predictions_count ?? 0}
+              gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            />
+            <StatCard
+              label="High Risk"
+              value={highRiskCount}
+              gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            />
+            <StatCard
+              label="Avg Performance"
+              value={avgPerf != null ? `${(avgPerf*100).toFixed(1)}%` : '—'}
+              gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            />
+            <StatCard
+              label="Model Accuracy"
+              value={accuracy != null ? `${(accuracy*100).toFixed(1)}%` : '—'}
+              gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            />
+          </Box>
 
-          <Grid container spacing={2.5} sx={{ mt: 0.5 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2.5, mt: 2.5 }}>
             {/* Performance Distribution (bar) */}
-            <Grid item xs={12} md={6}>
+            <Box>
               <Paper
                 elevation={0}
                 sx={{
@@ -337,10 +328,10 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
                   </ResponsiveContainer>
                 </Box>
               </Paper>
-            </Grid>
+            </Box>
 
             {/* Risk Level Analysis (pie) */}
-            <Grid item xs={12} md={6}>
+            <Box>
               <Paper
                 elevation={0}
                 sx={{
@@ -391,8 +382,8 @@ const EducatorDashboard: React.FC<{ onNavigateToTab?: (tabIndex: number) => void
                   </ResponsiveContainer>
                 </Box>
               </Paper>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Prediction Trends */}
           <Paper

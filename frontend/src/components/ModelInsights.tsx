@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Alert
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
 import InsightsIcon from '@mui/icons-material/Insights';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -62,24 +61,18 @@ const ModelInsights: React.FC = () => {
           <InsightsIcon color="primary" />
           <Typography variant="h5" fontWeight={700}>Model Insights</Typography>
         </Box>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
-            <StatCard label="Model Type" value={stats.model_info.model_type} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <StatCard label="Total Features" value={stats.model_info.total_features} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
-              <Typography variant="overline" color="text.secondary">Risk Levels</Typography>
-              <Box sx={{ display:'flex', gap: 1, flexWrap:'wrap', mt: 1 }}>
-                {stats.model_info.risk_levels.map((r) => (
-                  <Chip key={r} label={r} color={r.includes('High') ? 'error' : r.includes('Medium') ? 'warning' : 'success'} size="small" />
-                ))}
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2 }}>
+          <StatCard label="Model Type" value={stats.model_info.model_type} />
+          <StatCard label="Total Features" value={stats.model_info.total_features} />
+          <Paper elevation={2} sx={{ p: 2, borderRadius: 2 }}>
+            <Typography variant="overline" color="text.secondary">Risk Levels</Typography>
+            <Box sx={{ display:'flex', gap: 1, flexWrap:'wrap', mt: 1 }}>
+              {stats.model_info.risk_levels.map((r) => (
+                <Chip key={r} label={r} color={r.includes('High') ? 'error' : r.includes('Medium') ? 'warning' : 'success'} size="small" />
+              ))}
+            </Box>
+          </Paper>
+        </Box>
       </Paper>
 
       <Paper sx={{ p: 3, borderRadius: 3 }}>
