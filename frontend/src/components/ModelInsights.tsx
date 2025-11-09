@@ -5,10 +5,10 @@ import {
   Paper,
   Typography,
   Chip,
-  Grid,
   CircularProgress,
   Alert
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import InsightsIcon from '@mui/icons-material/Insights';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -103,4 +103,3 @@ const ModelInsights: React.FC = () => {
 };
 
 export default ModelInsights;
-

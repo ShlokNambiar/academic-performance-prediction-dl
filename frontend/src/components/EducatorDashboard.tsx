@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import {
   Box,
-  Grid,
   Paper,
   Typography,
   Chip,
@@ -12,6 +11,7 @@ import {
   Stack,
   Divider
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import PsychologyIcon from '@mui/icons-material/Psychology';
