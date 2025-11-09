@@ -29,9 +29,33 @@ const theme = createTheme({
     success: { main: '#22c55e' },
     warning: { main: '#f59e0b' },
     error: { main: '#ef4444' },
-    background: { default: '#f7f7fb' }
+    background: { default: '#f8f9fd', paper: '#ffffff' }
   },
   shape: { borderRadius: 12 },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h4: { fontWeight: 800 },
+    h5: { fontWeight: 700 },
+    h6: { fontWeight: 700 }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+          borderRadius: 10
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none'
+        }
+      }
+    }
+  }
 });
 
 interface TabPanelProps {
@@ -66,16 +90,36 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
-          <Toolbar>
-            <SchoolIcon sx={{ mr: 2 }} />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Academic Performance Prediction System
-            </Typography>
-            <Typography variant="body2">
-              AI-Powered Student Risk Assessment
-            </Typography>
+      <Box sx={{ flexGrow: 1, minHeight: '100vh', bgcolor: 'background.default' }}>
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderBottom: '1px solid rgba(255,255,255,0.1)'
+          }}
+        >
+          <Toolbar sx={{ py: 1 }}>
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: 2,
+                bgcolor: 'rgba(255,255,255,0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                mr: 2
+              }}
+            >
+              <SchoolIcon sx={{ fontSize: 28 }} />
+            </Box>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" component="div" fontWeight={800}>
+                Academic Performance Prediction System
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                AI-Powered Student Risk Assessment
+              </Typography>
+            </Box>
           </Toolbar>
         </AppBar>
 
@@ -83,22 +127,60 @@ function App() {
         {/* Hero section */}
         <Box sx={{
           width: '100%',
-          background: 'linear-gradient(135deg, #6A5AE0 0%, #8A67F4 100%)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
-          borderRadius: 2,
-          mb: 3,
-          p: { xs: 3, md: 5 }
+          borderRadius: 4,
+          mb: 4,
+          p: { xs: 4, md: 6 },
+          boxShadow: '0 10px 40px rgba(102, 126, 234, 0.3)',
+          position: 'relative',
+          overflow: 'hidden',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '40%',
+            height: '100%',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+            pointerEvents: 'none'
+          }
         }}>
-          <Typography variant="h4" fontWeight={800} gutterBottom>
-            Academic Performance Prediction
+          <Typography variant="h3" fontWeight={900} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
+            📚 Academic Performance Prediction
           </Typography>
-          <Typography variant="body1" sx={{ opacity: 0.9 }}>
-            AI-powered risk assessment, insights, and recommendations to support student success.
+          <Typography variant="h6" sx={{ opacity: 0.95, position: 'relative', zIndex: 1, fontWeight: 400 }}>
+            AI-powered risk assessment, insights, and personalized recommendations to support student success.
           </Typography>
         </Box>
 
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', bgcolor: 'background.default' }}>
-          <Tabs value={tabValue} onChange={handleTabChange} aria-label="dashboard tabs" variant="scrollable" allowScrollButtonsMobile>
+        <Box
+          sx={{
+            borderBottom: 2,
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            borderRadius: '12px 12px 0 0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+          }}
+        >
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            aria-label="dashboard tabs"
+            variant="scrollable"
+            allowScrollButtonsMobile
+            sx={{
+              '& .MuiTab-root': {
+                fontWeight: 700,
+                fontSize: '0.95rem',
+                textTransform: 'none',
+                minHeight: 64,
+                '&.Mui-selected': {
+                  color: 'primary.main'
+                }
+              }
+            }}
+          >
             <Tab icon={<DashboardIcon />} iconPosition="start" label="Dashboard" />
             <Tab icon={<PsychologyIcon />} iconPosition="start" label="Single Prediction" />
             <Tab icon={<UploadFileIcon />} iconPosition="start" label="Batch Predictions" />
@@ -126,18 +208,20 @@ function App() {
         <Box
           component="footer"
           sx={{
-            py: 3,
+            py: 4,
             px: 2,
-            mt: 'auto',
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[200]
-                : theme.palette.grey[800],
+            mt: 6,
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            borderRadius: '12px 12px 0 0'
           }}
         >
           <Container maxWidth="sm">
-            <Typography variant="body2" color="text.secondary" align="center">
-              © 2025 Academic Performance Prediction System | Deep Learning Project
+            <Typography variant="body1" align="center" fontWeight={600}>
+              © 2025 Academic Performance Prediction System
+            </Typography>
+            <Typography variant="body2" align="center" sx={{ opacity: 0.9, mt: 0.5 }}>
+              Deep Learning Project | AI-Powered Education Analytics
             </Typography>
           </Container>
         </Box>
