@@ -253,12 +253,34 @@ def get_stats():
         # Load feature importance
         feature_importance = pd.read_csv('outputs/feature_importance.csv')
 
+        # Load evaluation metrics if available
+        metrics_data = {}
+        try:
+            with open('outputs/evaluation_results.json', 'r') as f:
+                metrics_data = json.load(f)
+        except Exception:
+            try:
+                with open('evaluation_results.json', 'r') as f:
+                    metrics_data = json.load(f)
+            except Exception:
+                metrics_data = {}
+
+        classification_report = metrics_data.get('classification_report', {}) if isinstance(metrics_data.get('classification_report'), dict) else {}
+        weighted = classification_report.get('weighted avg', {}) if isinstance(classification_report.get('weighted avg'), dict) else {}
+        metrics = {
+            'accuracy': float(metrics_data.get('test_accuracy')) if metrics_data.get('test_accuracy') is not None else None,
+            'precision': float(metrics_data.get('precision')) if metrics_data.get('precision') is not None else None,
+            'recall': float(metrics_data.get('recall')) if metrics_data.get('recall') is not None else None,
+            'f1_weighted': float(weighted.get('f1-score')) if weighted.get('f1-score') is not None else (float(metrics_data.get('f1_score')) if metrics_data.get('f1_score') is not None else None)
+        }
+
         return jsonify({
             'model_info': {
                 'total_features': len(feature_names),
                 'risk_levels': target_encoder.classes_.tolist(),
                 'model_type': 'Deep Neural Network'
             },
+            'metrics': metrics,
             'top_features': feature_importance.head(10).to_dict('records'),
             'timestamp': datetime.now().isoformat()
         })
